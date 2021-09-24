@@ -8,9 +8,10 @@ def DT_train_binary(X, Y, max_depth):
     # step 1 - calculate entropy of the entire set
     branch_entropies = []
     tree = []
-    rules = []
+    #rules = []
     instruction = []
     solved_features = []
+    key_instruction = 0
     num_features = len(X[0])
     set_length = len(Y)
     num_positive = sum(Y)
@@ -19,23 +20,37 @@ def DT_train_binary(X, Y, max_depth):
     while(max_depth != len(tree)):
         for x in range(num_features):
             if x not in solved_features:
-                no_entropy = find_split_entropy(x, 0, X, Y, rules)
-                yes_entropy = find_split_entropy(x, 1, X, Y, rules)
+                no_entropy = find_split_entropy(x, 0, X, Y, tree)
+                yes_entropy = find_split_entropy(x, 1, X, Y, tree)
+                #if(tree != null):
+                    #total_entropy = yes_entropy[0]
+                    #set_length = yes_entropy[1]
                 branch_entropies.append(find_IG(no_entropy, yes_entropy, total_entropy, set_length))
         highest_IG = max(branch_entropies)
         max_index = branch_entropies.index(highest_IG)
         instruction.append(max_index)
+        branch_entropies.clear()
 
-        entropyN = find_split_entropy(max_index, 0, X, Y, rules)
+        entropyN = find_split_entropy(max_index, 0, X, Y, tree)
         if entropyN[0] == 0:
             instruction.append(0)
             instruction.append(2)
-        entropyY = find_split_entropy(max_index, 1, X, Y, rules)
+            key_instruction = 0
+        entropyY = find_split_entropy(max_index, 1, X, Y, tree)
         if entropyY[0] == 0:
             instruction.append(2)
             instruction.append(1)
-        tree.append(instruction)
+            key_instruction = 1
         solved_features.append(max_index)
+        tree.append(instruction)
+        # THIS HERE IS PROBLEM
+        # total_entropy, set_length = find_split_entropy(max_index, 1, X, Y, tree)
+        # ATTEMPT:
+        total_entropy, set_length = find_split_entropy(max_index, key_instruction, X, Y, tree)
+        # PROBLEM IS:
+        # INSTEAD OF '1' MUST BE WHATEVER DETERMINATION RULE WAS MADE FOR MAX INDEX
+        # EX. SHOULD BE 1 FOR FEMALE LEAD
+        # BUT 0 FOR COMEDY
 
     print("end")
 
@@ -48,12 +63,22 @@ def find_split_entropy(column, value, X, Y, rules):
     split_positive = 0
     split_total = 0
     for idx in enumerate(X):
-        if idx[1][column] == value:
+        if idx[1][column] == value and table_checker(idx[1], rules):
+            #check for tree in here
             split_total = split_total + 1
             if Y[idx[0]] == 1:
                 split_positive = split_positive + 1
     return calculate_entropy(split_positive, split_total), split_total
 
+
+def table_checker(line, rules):
+    for x in rules:
+        for y in range(len(x)-1):
+            if x[y+1] != 2:
+                if line[x[0]] == x[y+1]:
+                    return False
+            #print("true")
+    return True
 
 def calculate_entropy(pos, total):
     neg = total - pos
