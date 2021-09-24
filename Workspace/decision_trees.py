@@ -32,6 +32,18 @@ def DT_train_binary(X, Y, max_depth):
         branch_entropies.clear()
 
         entropyN = find_split_entropy(max_index, 0, X, Y, tree)
+        entropyY = find_split_entropy(max_index, 1, X, Y, tree)
+        #if entropyN[0] == 0 and entropyY[0] == 0:
+        #    if entropyN[3] == entropyN[1]:
+        #        instruction.append(0)
+        #    # else if split_positive == split_total instruction is 1
+        #    elif entropyN[2] == entropyN[1]:
+        #        instruction.append(1)
+        #    if entropyY[3] == entropyY[1]:
+        #        instruction.append(0)
+        #    # else if split_positive == split_total instruction is 1
+        #    elif entropyY[2] == entropyY[1]:
+        #        instruction.append(1)
         if entropyN[0] == 0:
             # if split_negative == split_total instruction is 0
             if entropyN[3] == entropyN[1]:
@@ -43,7 +55,7 @@ def DT_train_binary(X, Y, max_depth):
 
             instruction.append(2)
             key_instruction = 1
-        entropyY = find_split_entropy(max_index, 1, X, Y, tree)
+
         if entropyY[0] == 0:
             instruction.append(2)
             #instruction.append(1) #this value can vary
@@ -58,7 +70,23 @@ def DT_train_binary(X, Y, max_depth):
         tree.append(instruction)
         instruction = []
         #ERROR HERE, LAST CALCULATION DOESN'T TAKE CORRECT VALUES
-        total_entropy, set_length, total_positive, total_negative = find_split_entropy(max_index, key_instruction, X, Y, tree)
+        if (len(solved_features)+1 != num_features):
+            total_entropy, set_length, total_positive, total_negative = \
+                find_split_entropy(max_index, key_instruction, X, Y, tree)
+            #find instructions for last split
+        else:
+            entropyN = find_split_entropy(max_index, 0, X, Y, tree)
+            entropyY = find_split_entropy(max_index, 1, X, Y, tree)
+            if entropyN[3] == entropyN[1]:
+                instruction.append(0)
+            # else if split_positive == split_total instruction is 1
+            elif entropyN[2] == entropyN[1]:
+                instruction.append(1)
+            if entropyY[3] == entropyY[1]:
+                instruction.append(0)
+            # else if split_positive == split_total instruction is 1
+            elif entropyY[2] == entropyY[1]:
+                instruction.append(1)
     print("end")
 
     print(tree)
