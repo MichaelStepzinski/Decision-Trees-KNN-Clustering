@@ -28,6 +28,7 @@ def DT_train_binary(X, Y, max_depth):
                 branch_entropies.append(find_IG(no_entropy, yes_entropy, total_entropy, set_length))
         highest_IG = max(branch_entropies)
         max_index = branch_entropies.index(highest_IG)
+        #instruction.clear()
         instruction.append(max_index)
         branch_entropies.clear()
 
@@ -35,23 +36,20 @@ def DT_train_binary(X, Y, max_depth):
         if entropyN[0] == 0:
             instruction.append(0)
             instruction.append(2)
-            key_instruction = 0
+            key_instruction = 1
         entropyY = find_split_entropy(max_index, 1, X, Y, tree)
         if entropyY[0] == 0:
             instruction.append(2)
             instruction.append(1)
-            key_instruction = 1
+            key_instruction = 0
         solved_features.append(max_index)
         tree.append(instruction)
-        # THIS HERE IS PROBLEM
-        # total_entropy, set_length = find_split_entropy(max_index, 1, X, Y, tree)
-        # ATTEMPT:
+        instruction = []
+        #instruction.clear()
+        # CALLING INSTRUCTION.CLEAR ALSO CLEARS TREE >:(
         total_entropy, set_length = find_split_entropy(max_index, key_instruction, X, Y, tree)
-        # PROBLEM IS:
-        # INSTEAD OF '1' MUST BE WHATEVER DETERMINATION RULE WAS MADE FOR MAX INDEX
-        # EX. SHOULD BE 1 FOR FEMALE LEAD
-        # BUT 0 FOR COMEDY
 
+        # LEFT OFF AT DOUBLE CHECKING ALL FEATURES WORK PROPERLY
     print("end")
 
 
