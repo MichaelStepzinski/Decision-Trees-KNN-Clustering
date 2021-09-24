@@ -33,23 +33,32 @@ def DT_train_binary(X, Y, max_depth):
 
         entropyN = find_split_entropy(max_index, 0, X, Y, tree)
         if entropyN[0] == 0:
-            instruction.append(0) #this value can vary, find pattern of what to put
+            # if split_negative == split_total instruction is 0
+            if entropyN[3] == entropyN[1]:
+                instruction.append(0)
+            # else if split_positive == split_total instruction is 1
+            elif entropyN[2] == entropyN[1]:
+                instruction.append(1)
+            #instruction.append(0) #this value can vary, find pattern of what to put
 
             instruction.append(2)
             key_instruction = 1
         entropyY = find_split_entropy(max_index, 1, X, Y, tree)
         if entropyY[0] == 0:
             instruction.append(2)
-            instruction.append(1) #this value can vary
+            #instruction.append(1) #this value can vary
+            if entropyY[3] == entropyY[1]:
+                instruction.append(0)
+            # else if split_positive == split_total instruction is 1
+            elif entropyY[2] == entropyY[1]:
+                instruction.append(1)
+
             key_instruction = 0
         solved_features.append(max_index)
         tree.append(instruction)
         instruction = []
-        #instruction.clear()
-        # CALLING INSTRUCTION.CLEAR ALSO CLEARS TREE >:(
+        #ERROR HERE, LAST CALCULATION DOESN'T TAKE CORRECT VALUES
         total_entropy, set_length, total_positive, total_negative = find_split_entropy(max_index, key_instruction, X, Y, tree)
-
-        # LEFT OFF AT DOUBLE CHECKING ALL FEATURES WORK PROPERLY
     print("end")
 
     print(tree)
