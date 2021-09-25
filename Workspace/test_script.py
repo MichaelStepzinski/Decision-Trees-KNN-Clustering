@@ -28,19 +28,16 @@ def load_data(fname):
     Y = np.array(Y)
     return X, Y
 
-#X, Y = load_data("TVShows_data.txt")
-#max_depth = 4
-#DT = dt.DT_train_binary(X, Y, max_depth)
 
 X, Y = load_data("data_1.txt")
 max_depth = 3
 DT = dt.DT_train_binary(X, Y, max_depth)
-#test_acc = dt.DT_test_binary(X, Y, DT)
-#print("DT:", test_acc)
+test_acc = dt.DT_test_binary(X, Y, DT)
+print("DT:", test_acc)
 
-#X, Y = load_data("data_4.txt")
-#acc = nn.KNN_test(X, Y, X, Y, 1)
-#print("KNN:", acc)
+X, Y = load_data("data_4.txt")
+acc = nn.KNN_test(X, Y, X, Y, 1)
+print("KNN:", acc)
 
 #X, Y = load_data("data_5.txt")
 #mu = np.array([[1], [5]])
