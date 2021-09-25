@@ -29,7 +29,7 @@ def load_data(fname):
     return X, Y
 
 X, Y = load_data("TVShows_data.txt")
-max_depth = 3
+max_depth = 4
 DT = dt.DT_train_binary(X, Y, max_depth)
 
 #X, Y = load_data("data_1.txt")
