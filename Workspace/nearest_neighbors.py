@@ -41,6 +41,6 @@ def KNN_test(X_train,Y_train,X_val,Y_val, K):
     iterator = 0
     total_size = len(Y_train)
     for x in range (total_size):
-        if y_values[x] == Y_train[x]:
+        if y_values[x] == Y_val[x]:
             accuracy = accuracy + 1
     return accuracy / total_size
