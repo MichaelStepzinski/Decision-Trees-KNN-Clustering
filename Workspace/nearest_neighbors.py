@@ -4,6 +4,8 @@ from scipy import spatial
 from random import randint
 
 def KNN_test(X_train,Y_train,X_val,Y_val, K):
+    total_size = 0
+    accuracy = 0
     iterator = 0
     value = 0
     y_values = []
@@ -12,7 +14,6 @@ def KNN_test(X_train,Y_train,X_val,Y_val, K):
     sum = 0
     # k_values = []
     for coordinates in X_train:
-        print("X: {} Y: {}".format(coordinates, Y_train[iterator]))
         # find iterators of K closest neighbors
         for x_test in X_val:
             neighbor_distance_list.append(math.dist(coordinates, x_test))
@@ -23,7 +24,6 @@ def KNN_test(X_train,Y_train,X_val,Y_val, K):
         #add up all neighbor values
         for x in range(K):
             sum = sum + Y_train[closest_neighbors_iterators[x]]
-        #Sum = sum(k_values)
         if sum > 0:
             value = 1
         elif sum < 0:
@@ -37,5 +37,10 @@ def KNN_test(X_train,Y_train,X_val,Y_val, K):
         neighbor_distance_list.clear()
         value = 0
         sum = 0
-        print("guess: {}".format(y_values[iterator]))
         iterator = iterator + 1
+    iterator = 0
+    total_size = len(Y_train)
+    for x in range (total_size):
+        if y_values[x] == Y_train[x]:
+            accuracy = accuracy + 1
+    return accuracy / total_size
