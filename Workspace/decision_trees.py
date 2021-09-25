@@ -67,15 +67,15 @@ def DT_train_binary(X, Y, max_depth):
                 # else if split_positive == split_total instruction is 1
                 elif entropyY[2] == entropyY[1]:
                     instruction.append(1)
+                key_instruction = 0
 
-            key_instruction = 0
+
         solved_features.append(max_index)
         tree.append(instruction)
         instruction = []
         #ERROR HERE, LAST CALCULATION DOESN'T TAKE CORRECT VALUES
         if (len(solved_features)+1 != num_features):
-            total_entropy, set_length, total_positive, total_negative = \
-                find_split_entropy(max_index, key_instruction, X, Y, tree)
+            total_entropy, set_length, total_positive, total_negative = find_split_entropy(max_index, key_instruction, X, Y, tree)
             #find instructions for last split
         else:
             #put last remaining index as max index
