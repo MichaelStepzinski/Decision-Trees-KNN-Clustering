@@ -12,12 +12,13 @@ def DT_train_binary(X, Y, max_depth):
     instruction = []
     solved_features = []
     key_instruction = 0
+    stop = False
     num_features = len(X[0])
     set_length = len(Y)
     num_positive = sum(Y)
     total_entropy = calculate_entropy(num_positive, set_length)
 
-    while(max_depth != len(tree) and len(solved_features) < num_features):
+    while(max_depth != len(tree) and len(solved_features) < num_features and not stop):
         for x in range(num_features):
             if x not in solved_features:
                 no_entropy = find_split_entropy(x, 0, X, Y, tree)
@@ -33,26 +34,39 @@ def DT_train_binary(X, Y, max_depth):
 
         entropyN = find_split_entropy(max_index, 0, X, Y, tree)
         entropyY = find_split_entropy(max_index, 1, X, Y, tree)
-        if entropyN[0] == 0:
-            # if split_negative == split_total instruction is 0
+        if entropyN[0] == 0 and entropyY[0] == 0:
             if entropyN[3] == entropyN[1]:
                 instruction.append(0)
-            # else if split_positive == split_total instruction is 1
             elif entropyN[2] == entropyN[1]:
                 instruction.append(1)
-            #instruction.append(0) #this value can vary, find pattern of what to put
-
-            instruction.append(2)
-            key_instruction = 1
-
-        if entropyY[0] == 0:
-            instruction.append(2)
-            #instruction.append(1) #this value can vary
             if entropyY[3] == entropyY[1]:
                 instruction.append(0)
             # else if split_positive == split_total instruction is 1
             elif entropyY[2] == entropyY[1]:
                 instruction.append(1)
+            stop = True
+        else:
+            if entropyN[0] == 0:
+                # if split_negative == split_total instruction is 0
+                if entropyN[3] == entropyN[1]:
+                    instruction.append(0)
+                # else if split_positive == split_total instruction is 1
+                elif entropyN[2] == entropyN[1]:
+                    instruction.append(1)
+                #instruction.append(0) #this value can vary, find pattern of what to put
+
+                # ADD QUALIFIER HERE - IF ENTROPIES OF BOTH SPLITS ARE 0
+                instruction.append(2)
+                key_instruction = 1
+
+            if entropyY[0] == 0:
+                instruction.append(2)
+                #instruction.append(1) #this value can vary
+                if entropyY[3] == entropyY[1]:
+                    instruction.append(0)
+                # else if split_positive == split_total instruction is 1
+                elif entropyY[2] == entropyY[1]:
+                    instruction.append(1)
 
             key_instruction = 0
         solved_features.append(max_index)
@@ -83,7 +97,7 @@ def DT_train_binary(X, Y, max_depth):
                 instruction.append(1)
             tree.append(instruction)
             solved_features.append(max_index)
-    print("end")
+    #print("end")
 
     print(tree)
 
@@ -114,30 +128,18 @@ def table_checker(line, rules):
                     #in false instruction column
                     if line[x[0]] == 1:
                         return False
-                    #elif line[x[0]] == 0:
-                        #return True
                 if y+1 == 2:
                     #in true instruction column
-                    #if line[x[0]] == 1:
-                        #return True
                     if line[x[0]] == 0:
                         return False
-                #if y+1 == 1:
-                #    return False
-                #if y+1 == 2:
-                #    return True
-            # OLD CODE
-            #if x[y+1] != 2:
-            #    column = x[0]
-            #    column_val = line[column]
-            #    if column_val == rule_value:
-            #        return False
-            # OLD CODE
     return True
 
 def calculate_entropy(pos, total):
     neg = total - pos
-    if neg == 0:
+    if total == 0:
+        print("entropy is 0")
+        return 0
+    elif neg == 0:
         return - (pos / total) * math.log2(pos / total)
     elif pos == 0:
         return - (neg / total) * math.log2(neg / total)

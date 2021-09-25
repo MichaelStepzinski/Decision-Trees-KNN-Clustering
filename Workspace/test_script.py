@@ -28,13 +28,13 @@ def load_data(fname):
     Y = np.array(Y)
     return X, Y
 
-X, Y = load_data("TVShows_data.txt")
-max_depth = 4
-DT = dt.DT_train_binary(X, Y, max_depth)
-
-#X, Y = load_data("data_1.txt")
-#max_depth = 3
+#X, Y = load_data("TVShows_data.txt")
+#max_depth = 4
 #DT = dt.DT_train_binary(X, Y, max_depth)
+
+X, Y = load_data("data_1.txt")
+max_depth = 3
+DT = dt.DT_train_binary(X, Y, max_depth)
 #test_acc = dt.DT_test_binary(X, Y, DT)
 #print("DT:", test_acc)
 
